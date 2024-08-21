@@ -1,7 +1,6 @@
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 
-StealthPlugin().enabledEvasions.set("user-agent", true); // Fine-tune evasion
 puppeteer.use(StealthPlugin());
 
 const fetchSteamData = async (appid) => {
