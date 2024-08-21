@@ -20,123 +20,21 @@ const fetchSteamData = async (appid) => {
 
     const page = await browser.newPage();
     await page.goto(`https://steamdb.info/app/${appid}/charts/#followers`, {
-      waitUntil: "load",
+      waitUntil: "networkidle2",
     });
 
     console.log("Page loaded successfully");
 
-    // Store Data
-    const storeData = await page.evaluate(() => {
-      const storeDataElement = document.querySelector(
-        ".row.row-app-charts .span4:nth-child(1) .app-chart-numbers"
-      );
-      return storeDataElement
-        ? {
-            followers:
-              storeDataElement.querySelector("li:nth-child(1) strong")
-                ?.innerText || "N/A",
-            topSellers:
-              storeDataElement.querySelector("li:nth-child(2) strong")
-                ?.innerText || "N/A",
-            positiveReviews:
-              storeDataElement.querySelector("li:nth-child(3) strong")
-                ?.innerText || "N/A",
-            negativeReviews:
-              storeDataElement.querySelector("li:nth-child(4) strong")
-                ?.innerText || "N/A",
-            positivePercentage:
-              storeDataElement.querySelector("li:nth-child(5) strong")
-                ?.innerText || "N/A",
-          }
-        : {
-            followers: "N/A",
-            topSellers: "N/A",
-            positiveReviews: "N/A",
-            negativeReviews: "N/A",
-            positivePercentage: "N/A",
-          };
+    // Debugging: Log the entire HTML of the targeted section
+    const htmlContent = await page.evaluate(() => {
+      return document.querySelector(".row.row-app-charts").innerHTML;
     });
 
-    // Twitch Stats Data
-    const twitchData = await page.evaluate(() => {
-      const twitchDataElement = document.querySelector(
-        ".row.row-app-charts .span4:nth-child(2) .app-chart-numbers"
-      );
-      return twitchDataElement
-        ? {
-            twitchViewers:
-              twitchDataElement.querySelector("li:nth-child(1) strong")
-                ?.innerText || "N/A",
-            twitchPeak24:
-              twitchDataElement.querySelector("li:nth-child(2) strong")
-                ?.innerText || "N/A",
-            twitchAllTimePeak:
-              twitchDataElement.querySelector("li:nth-child(3) strong")
-                ?.innerText || "N/A",
-          }
-        : {
-            twitchViewers: "N/A",
-            twitchPeak24: "N/A",
-            twitchAllTimePeak: "N/A",
-          };
-    });
-
-    // Owner Estimations Data
-    const ownerData = await page.evaluate(() => {
-      const ownerDataElement = document.querySelector(
-        ".row.row-app-charts .span4:nth-child(3) .app-chart-numbers"
-      );
-      return ownerDataElement
-        ? {
-            ownerVG:
-              ownerDataElement.querySelector("li:nth-child(1) strong")
-                ?.innerText || "N/A",
-            ownerGamalytic:
-              ownerDataElement.querySelector("li:nth-child(2) strong")
-                ?.innerText || "N/A",
-            ownerPlayTracker:
-              ownerDataElement.querySelector("li:nth-child(3) strong")
-                ?.innerText || "N/A",
-          }
-        : {
-            ownerVG: "N/A",
-            ownerGamalytic: "N/A",
-            ownerPlayTracker: "N/A",
-          };
-    });
-
-    // Steam Charts Data
-    const steamCharts = await page.evaluate(() => {
-      const steamChartsElement = document.querySelector(
-        ".app-chart-numbers-big"
-      );
-      return steamChartsElement
-        ? {
-            playersNow:
-              steamChartsElement.querySelector("li:nth-child(2) strong")
-                ?.innerText || "N/A",
-            peak24:
-              steamChartsElement.querySelector("li:nth-child(3) strong")
-                ?.innerText || "N/A",
-            allTimePeak:
-              steamChartsElement.querySelector("li:nth-child(4) strong")
-                ?.innerText || "N/A",
-          }
-        : {
-            playersNow: "N/A",
-            peak24: "N/A",
-            allTimePeak: "N/A",
-          };
-    });
+    console.log("HTML Content:", htmlContent);
 
     await browser.close();
 
-    return {
-      storeData,
-      twitchData,
-      ownerData,
-      steamCharts,
-    };
+    return { htmlContent }; // You can change what is returned based on your need
   } catch (error) {
     console.error("Error fetching Steam data:", error.message);
     throw new Error("Failed to fetch Steam data.");
