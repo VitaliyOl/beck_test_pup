@@ -6,7 +6,7 @@ puppeteer.use(StealthPlugin());
 const fetchSteamData = async (appid) => {
   try {
     const browser = await puppeteer.launch({
-      headless: false, // Run in headful mode
+      headless: true, // Run in headful mode
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
