@@ -25,16 +25,13 @@ const fetchSteamData = async (appid) => {
 
     console.log("Page loaded successfully");
 
-    // Debugging: Log the entire HTML of the targeted section
-    const htmlContent = await page.evaluate(() => {
-      return document.querySelector(".row.row-app-charts").innerHTML;
-    });
-
-    console.log("HTML Content:", htmlContent);
+    // Log the full document HTML to diagnose the structure
+    const fullHTML = await page.content();
+    console.log("Full Page HTML:", fullHTML);
 
     await browser.close();
 
-    return { htmlContent }; // You can change what is returned based on your need
+    return { fullHTML };
   } catch (error) {
     console.error("Error fetching Steam data:", error.message);
     throw new Error("Failed to fetch Steam data.");
